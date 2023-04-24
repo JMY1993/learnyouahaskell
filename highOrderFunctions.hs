@@ -1,3 +1,5 @@
+import Data.List
+
 {-
 function1: zipWith'
 
@@ -56,7 +58,7 @@ filter' p (x : xs)
   | otherwise = filter' p xs
 
 {-
-problem: Let's find the largest number under 100,000 that's divisible by 3829.
+problem1: Let's find the largest number under 100,000 that's divisible by 3829.
 -}
 
 largestDivisible :: (Integral a) => a
@@ -64,14 +66,14 @@ largestDivisible = head (filter p [10000,9999..])
   where p x = x `mod` 3829 == 0
 
 {-
-problem: find the sum of all odd squares that are smaller than 10,000
+problem2: find the sum of all odd squares that are smaller than 10,000
 -}
 
 sumOfAllOddSquareSmallerThan10000 :: Integer
 sumOfAllOddSquareSmallerThan10000 = sum (takeWhile (< 10000) (filter odd (map (^2) [1..])))
 
 {-
-problem: Collatz sequences. We take a natural number. If that number is even, 
+problem3: Collatz sequences. We take a natural number. If that number is even, 
 we divide it by two. If it's odd, we multiply it by 3 and then add 1 to that. 
 We take the resulting number and apply the same thing to it, which produces a 
 new number and so on. In essence, we get a chain of numbers. It is thought 
@@ -96,7 +98,7 @@ chainsLongerThan15 :: Int
 chainsLongerThan15 = length (filter (>15) (map (length . collatzChain) [1..100]))
 
 {-
-function: sum'
+function5: sum'
 implement the sum function with foldl
 -}
 
@@ -104,8 +106,49 @@ sum' :: (Num a) => [a] -> a
 sum' = foldl (+) 0
 
 {-
-function: elem'
+function6: elem'
 implement it with foldl
 -}
 elem' :: (Eq a) => a -> [a] -> Bool
 elem' x = foldl (\acc e -> acc || x == e) False
+
+{-
+function7: map'
+implement it with foldr
+-}
+
+map'' :: (a -> b) -> [a] -> [b]
+map'' f = foldr (\x acc -> (f x):acc) []
+
+-- implement map with foldl
+{-
+if we run the code: take 5 (mapl (+3) [1..]), the programme falls into an infinite loop
+that's because 'foldl' doesn't work on an infinite loop, it is, as explained by the book,
+if you take an infinite list at some point and you fold it up from the right, you'll 
+eventually reach the beginning of the list. However, if you take an infinite list at a 
+point and you try to fold it up from the left, you'll never reach an end!
+-}
+mapl :: (a->b) -> [a] -> [b]
+mapl f = foldl (\acc e -> acc ++ [f e]) []
+
+mapl' :: (a->b) -> [a] -> [b]
+mapl' f = foldl' (\acc e -> acc ++ [f e]) []
+
+{-
+function 8 - 13
+implement maximum, reverse, product, filter, head, last
+with foldl,foldr,foldl1,foldr1
+-}
+maximum'' :: (Num a, Ord a) => [a] -> a
+maximum'' = foldl max 0 -- or `foldl1 max`
+
+reverse'' :: [a] -> [a]
+reverse'' = foldl (flip (:)) []
+
+product'' :: (Num a) => [a] -> a
+product'' = foldl1 (*)
+
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' f = foldr (\x acc -> if f x then x : acc else acc) []
+-- to use the pre-defined accumulator fold, be sure to check that 
+-- the return type and the type of the first element of the list is of the same type
