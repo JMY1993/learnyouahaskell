@@ -121,16 +121,50 @@ map'' :: (a -> b) -> [a] -> [b]
 map'' f = foldr (\x acc -> (f x):acc) []
 
 -- implement map with foldl
-{-
+{- SOLVED:
 if we run the code: take 5 (mapl (+3) [1..]), the programme falls into an infinite loop
 that's because 'foldl' doesn't work on an infinite loop, it is, as explained by the book,
 if you take an infinite list at some point and you fold it up from the right, you'll 
 eventually reach the beginning of the list. However, if you take an infinite list at a 
 point and you try to fold it up from the left, you'll never reach an end!
+
+let's take `foldl f acc [x1, x2, x3 ...]` as example, expand it:
+steps:
+1   a = f acc x1
+2   a = f a1 x2 
+       = f (f acc x1) x2
+3   a = f (f (f acc x1) x2) x3
+4   a = f (f (f (f acc x1) x2) x3) x4
+
+if it's not clear enough for the above, let's try: `flip (foldl f) [x1, x2, x3 ...] acc`:
+1   a = f x1 acc
+2   a = f x2 $ f acc x1
+3   a = f x3 $ f x2 $ f acc x1
+4   a = f x4 $ f x3 $ f x2 $ f acc x1
+...
+l2  a = f xlb2 $ ... $ f x4 $ f x3 $ f x2 $ f acc x1
+l1  a = f xlb1 $ f xlb2 $ ... $ f x4 $ f x3 $ f x2 $ f acc x1
+
+in order to work on the evaluation, the last element shall be provided (accessible), so
+it's not working on infinite lists. On the contrary, when we expand a foldr evaluation:
+
+`foldl f [x1, x2, x3 ...] acc`
+steps: (xlb = x-last-but-)
+1   a = f xlb1
+2   a = f x-last-but-2 a1
+       = f xlb2 (f xend acc)
+4   a = f xlb3 (f xlb2 (f xlb1 acc))
+...
+l3  a = f x3 $ ... $ f xlb2 $ f xlb1 acc
+l2  a = f x2 $ f x3 $ ... $ f xlb2 $ f xlb1 acc
+l1  a = f x1 $ f x2 $ f x3 $ ... $ f xlb3 $ f xlb2 $ f xlb1 acc
+
+Hakell is lazy: it only takes as many as it was told
 -}
 mapl :: (a->b) -> [a] -> [b]
 mapl f = foldl (\acc e -> acc ++ [f e]) []
 
+-- still stuck
 mapl' :: (a->b) -> [a] -> [b]
 mapl' f = foldl' (\acc e -> acc ++ [f e]) []
 
