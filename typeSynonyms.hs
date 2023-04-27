@@ -1,3 +1,4 @@
+-- as part of Unit 8
 import Data.List (find)
 {-
 task: make a phonebook data type (with Synonym syntax)

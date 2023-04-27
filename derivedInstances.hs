@@ -1,4 +1,4 @@
-{-
+{- 
 question: what are the most commonly used typeclasses we've already met for now?
 And what are their charactristics?
 Eq: types deriving Eq can be tested of their equality
