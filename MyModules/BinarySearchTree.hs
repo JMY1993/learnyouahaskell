@@ -28,7 +28,7 @@ it starts from the left-most value?
 The lsp suggests to reform the code:
     treeFromList [] = EmptyTree
     treeFromList (x:xs) = treeInsert x (treeFromList xs)
-    
+
 to this one:
     treeFromList = foldr treeInsert EmptyTree
 
@@ -37,7 +37,7 @@ treeInsert x1 (treeFormList xs)
 = t x1 (t x2 (t x3 (t x4 (t x5 EmptyTree))))
                             ^ the first value that is calculated is x5, which is at the end of the list
 -}
-treeFromList = foldl (flip treeInsert) EmptyTree
+treeFromList = foldr treeInsert EmptyTree
 
 treeElem :: (Ord a) => a -> Tree a -> Bool
 treeElem x EmptyTree = False
