@@ -49,6 +49,9 @@ question: what does ":info" directive work for:
 {-
 question: describe the keywords hierarchy of haskell
 TODO:
+:k works on type constructors and classes, not value constructors
+:t works on values, functions, and value constructors (Since value 
+   constructors are basically just values that take parameters)
 -}
 
 {-
