@@ -31,6 +31,9 @@ if we sequence the above result, it works!
 
 if we change map into mapM, it works!
 
+if we change map into mapM_, it works! only we have to change the type delcaration to
+myPutStr :: [Char] -> IO ()
+
 type declarations:
 sequence :: [IO a] -> IO [a]
 
@@ -41,6 +44,8 @@ mapM :: (a -> IO a) -> [a] -> IO [a]
 instance Show (IO ()) where
     show _ = "random string"
 
-myPutStr :: [Char] -> IO [()]
-myPutStr str = sequence $ map putChar str
+-- myPutStr :: [Char] -> IO [()]
+-- myPutStr str = sequence $ map putChar str
 -- myPutStr = mapM putChar
+myPutStr :: [Char] -> IO ()
+myPutStr = mapM_ putChar
