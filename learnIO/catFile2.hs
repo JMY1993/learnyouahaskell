@@ -7,7 +7,7 @@ main = do
             contents <- hGetContents handle
             putStr contents)
 {-
-TODO: the following is just my opinion. Now I think it might be wrong.
+TODO: the following is just my opinion. Now I think it about might be wrong.
 the following code won't work, because the handle is closed inside function `withFile`. It means that
 you have to finish all the IO actions inside the function that you pass as parameter, since there will be no handle
 that is open outside `withFile`
