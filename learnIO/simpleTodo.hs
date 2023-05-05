@@ -3,10 +3,12 @@ import System.Environment (getArgs, getProgName)
 import System.IO (IOMode (ReadMode), hClose, hGetContents, hPutStr, openFile, openTempFile)
 
 main = do
-  (cmd : args) <- getArgs
-  case lookup cmd dispatch of
-    (Just action) -> action args
-    Nothing -> errorExit cmd
+  args <- getArgs
+  case args of
+    [] -> help []
+    (cmd : args) -> case lookup cmd dispatch of
+        (Just action) -> action args
+        Nothing -> errorExit cmd
 
 dispatch :: [(String, [String] -> IO ())]
 dispatch =
