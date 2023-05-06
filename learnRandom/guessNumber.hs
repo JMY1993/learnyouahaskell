@@ -1,4 +1,5 @@
 import System.Random
+import Control.Monad
 {-
 requirements:
 make a program that asks your user for a number each time, with which the program compares a randomly generated number.
@@ -18,7 +19,8 @@ askForNumber gen = do
     let (key, gen') = randomR (1,10) gen
         guess = read input :: Int
     -- gen' <- newStdGen
-    if key == guess
-        then do putStrLn "You are correct!"
-        else do putStrLn ("Sorry, it was " ++ show key)
-    askForNumber gen'
+    unless (null input) $ do
+        if key == guess
+            then putStrLn "You are correct!"
+            else putStrLn ("Sorry, it was " ++ show key)
+        askForNumber gen'
