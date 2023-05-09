@@ -29,6 +29,8 @@ chooseRoute r (sec:restNet) prev =
     case r of A -> min (chooseRoute A restNet (prev + routeA sec)) (chooseRoute B restNet (prev + routeA sec + cross sec))
               B -> min (chooseRoute B restNet (prev + routeB sec)) (chooseRoute A restNet (prev + routeB sec + cross sec))
 
+--below is a version that logs the route we choose
+
 shortestPathLog :: (Num a, Ord a) => Net a -> (a, [Route])
 shortestPathLog net = minWithLog (chooseRouteLog A net 0 []) (chooseRouteLog B net 0 [])
 
