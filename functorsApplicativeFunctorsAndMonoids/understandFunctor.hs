@@ -52,4 +52,16 @@ if we have a function:
 
 testFunc x = x + 1, we can label it with `testFunc :: (->) Int Int`
                                                                 ^ the second Int is what to be fmaped over, since `(->) Int` has a kind of * -> *
+
+Keep this very important thing in mind, that Functor instances and fmap is more like maping a function over a computation, it results in the same computation
+but the result of that computation is modified with the function. Think how we fmap an IO action and how we fmap a function.
+
+instance Functor IO where
+    fmap f action = do
+        result <- action
+        return (f result)
+
+one important thing, very important, that in the type declaration`fmap :: (a -> b) -> f a -> f b`, f stantds for (Functor f). But when deriving instance of Functor, people write things like:
+
+fmap f g = (\x -> f (g x)), here f is a function with the type of (a -> b) not (Functor f). Do not confuse the two. And g is the value with the type of (Functor f), which is by nature a function.
 -}
