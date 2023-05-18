@@ -17,3 +17,8 @@ infixl 7 .*
 a .* b = case (a, b) of
     (0, _) -> 0
     (a, b) -> b + ((a-1) .* b)
+
+
+{-
+this is to test if wsl2-ubuntu is good for haskell learning
+-}
