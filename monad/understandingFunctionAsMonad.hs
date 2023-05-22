@@ -104,7 +104,7 @@ write an implementation of Monad type class, and think of it.
 -}
 
 class Monad' m where
-  return :: a -> m a
+  return' :: a -> m a
 
   (>>=.) :: m a -> (a -> m b) -> m b -- the computational context is piped with (>>=.) symbol
 
@@ -120,7 +120,7 @@ declare Maybe as instance of Monad'
 -}
 
 instance Monad' Maybe where
-  return = Just
+  return' = Just
 
   (>>=.) Nothing _ = Nothing
   (>>=.) (Just a) f = f a
@@ -149,3 +149,71 @@ landRight n (l, r)
 
 banana :: Pole -> Maybe Pole
 banana _ = Nothing
+
+{-
+
+task4: understand the meaning of "do notation".
+
+
+the following code demonstrates how do notation is syntax sugar of a chain of nested >>= functions
+
+a line of expression which denotes a monad value, if not binded with the back arrow (<-) symbol, is the same as writing
+the expression in front of the symbol ">>". It means to ignore the value encapsulated, but the computational context is
+preserved.
+-}
+
+foo = Just 3 >>= \x ->
+      Just "!" >>= \y ->
+      Just (show x ++ y) >>
+      Just "xiba" >>= \z ->
+      Just (z ++ "shift")
+
+bar = do
+  x <- Just 3
+  y <- Just "!"
+  Just (show x ++ y)
+  z <- Just "xiba"
+  Just (z ++ "shift")
+
+{-
+task 5: make a function to test whether a given number has "7" in any of its digits
+-}
+
+testDigit :: (Num a, Show a) => a -> a -> Bool
+testDigit num targetNum = head (show num) `elem` show targetNum
+
+test7 = testDigit 7
+-- below is a funtion to find out all the numbers containing 7 as one of its digits in a given range
+
+test7R upper lower = [ n | n <- [upper .. lower], test7 n]
+
+{-
+task 6: make a guard funtion, which coupled with do notation could make a seemingly implementation of list comprehension
+-}
+
+guard :: (Monad m, Monoid (m ())) => Bool -> m ()
+guard False = mempty
+guard True = return ()
+
+-- the text book offered another implementation:
+class (Monad m) => MonadPlus m where
+  mzero :: m a
+  mplus :: m a -> m a -> m a
+
+instance MonadPlus [] where
+  mzero = []
+  mplus = (++)
+
+guard' False = mzero
+guard' True = return ()
+
+-- apply guard to the predicate you wish to filter, put the guard exp amid a do notation or a (>>=) chain before (>>)
+sevenOnly = do
+  x <- [1 .. 50]
+  guard ('7' `elem` show x)
+  return x
+-- here pay attention that sevenOnly evaluation is not feeding [1..50] to the guard first and then feed the result to return x
+-- it's [1..50] got fed into a function like (\x -> guard ('7' `elem` show x) >>= (\_ -> return x))
+-- which is (\x -> guard ('7' `elem` show x) >> return x)
+-- the 50 numbers got applied with the function above respectively (the map function)
+-- and got concatenated into on single []
