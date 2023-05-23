@@ -212,7 +212,7 @@ sevenOnly = do
   x <- [1 .. 50]
   guard ('7' `elem` show x)
   return x
--- here pay attention that sevenOnly evaluation is not feeding [1..50] to the guard first and then feed the result to return x
+-- here pay attention that sevenOnly is not feeding [1..50] to the guard first and then feed the result to return x
 -- it's [1..50] got fed into a function like (\x -> guard ('7' `elem` show x) >>= (\_ -> return x))
 -- which is (\x -> guard ('7' `elem` show x) >> return x)
 -- the 50 numbers got applied with the function above respectively (the map function)
