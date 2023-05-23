@@ -154,7 +154,6 @@ banana _ = Nothing
 
 task4: understand the meaning of "do notation".
 
-
 the following code demonstrates how do notation is syntax sugar of a chain of nested >>= functions
 
 a line of expression which denotes a monad value, if not binded with the back arrow (<-) symbol, is the same as writing
@@ -162,11 +161,13 @@ the expression in front of the symbol ">>". It means to ignore the value encapsu
 preserved.
 -}
 
-foo = Just 3 >>= \x ->
-      Just "!" >>= \y ->
-      Just (show x ++ y) >>
-      Just "xiba" >>= \z ->
-      Just (z ++ "shift")
+foo =
+  Just 3 >>= \x ->
+    Just "!" >>= \y ->
+      Just (show x ++ y)
+        >> Just "xiba"
+        >>= \z ->
+          Just (z ++ "shift")
 
 bar = do
   x <- Just 3
@@ -183,9 +184,10 @@ testDigit :: (Num a, Show a) => a -> a -> Bool
 testDigit num targetNum = head (show num) `elem` show targetNum
 
 test7 = testDigit 7
+
 -- below is a funtion to find out all the numbers containing 7 as one of its digits in a given range
 
-test7R upper lower = [ n | n <- [upper .. lower], test7 n]
+test7R upper lower = [n | n <- [upper .. lower], test7 n]
 
 {-
 task 6: make a guard funtion, which coupled with do notation could make a seemingly implementation of list comprehension
@@ -212,8 +214,41 @@ sevenOnly = do
   x <- [1 .. 50]
   guard ('7' `elem` show x)
   return x
+
 -- here pay attention that sevenOnly is not feeding [1..50] to the guard first and then feed the result to return x
 -- it's [1..50] got fed into a function like (\x -> guard ('7' `elem` show x) >>= (\_ -> return x))
--- which is (\x -> guard ('7' `elem` show x) >> return x)
+-- which is (\x -> guard ('7' `elem` show x) >> return x).
 -- the 50 numbers got applied with the function above respectively (the map function)
 -- and got concatenated into on single []
+
+{-
+task 7: find out if the knight can reach a certain position in three moves
+-}
+
+type KnightPos = (Int, Int)
+
+moveKnight :: KnightPos -> [KnightPos]
+moveKnight (c, r) = do
+  (c', r') <-
+    [ (c + 2, r + 1),
+      (c + 2, r - 1),
+      (c - 2, r + 1),
+      (c - 2, r - 1),
+      (c + 1, r + 2),
+      (c + 1, r - 2),
+      (c - 1, r + 2),
+      (c - 1, r - 2)
+      ]
+  guard (onBoard (c', r'))
+  return (c', r')
+  where
+    onBoard (c', r') = c' `elem` [1 .. 8] && r' `elem` [1 .. 8]
+
+in3 :: KnightPos -> [KnightPos]
+in3 start = do
+  move1 <- moveKnight start
+  move2 <- moveKnight move1
+  moveKnight move2
+
+canReachIn3 :: KnightPos -> KnightPos -> Bool
+canReachIn3 start end = end `elem` in3 start
