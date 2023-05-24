@@ -1,16 +1,16 @@
-import qualified Monad.StateMonad as MState
+import Monad.StateMonad
 
 type Stack a = [a]
 
-pop :: MState.State' (Stack a) a
-pop = MState.State' (\(x:xs) -> (x, xs))
+pop :: State' (Stack a) a
+pop = State' (\(x:xs) -> (x, xs))
 
-push :: a -> MState.State' (Stack a) ()
-push a = MState.State' (\xs -> ((), a:xs))
+push :: a -> State' (Stack a) ()
+push a = State' (\xs -> ((), a:xs))
 
 {-
 below is series of funtions that takes an Int value and returns State' Int (Stack Int)
 -}
 
-initStackWith :: [a] -> MState.State' (Stack a) ()
-initStackWith xs = MState.State' (const ((), xs))
+initStackWith :: [a] -> State' (Stack a) ()
+initStackWith xs = State' (const ((), xs))
