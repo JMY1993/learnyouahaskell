@@ -1,3 +1,4 @@
+module Monad.StateMonad(State'(..)) where
 {-
 below is my understanding of Stateful monad
 
