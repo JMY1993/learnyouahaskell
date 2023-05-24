@@ -193,7 +193,7 @@ test7R upper lower = [n | n <- [upper .. lower], test7 n]
 task 6: make a guard funtion, which coupled with do notation could make a seemingly implementation of list comprehension
 -}
 
-guard :: (Monad m, Monoid (m ())) => Bool -> m ()
+guard :: (Monad m, Monoid (m ())) => Bool -> m () --() has its own type, its type is also ()
 guard False = mempty
 guard True = return ()
 
