@@ -18,7 +18,7 @@ TODO:
 9. [x] implement foldM
 10. [x] make a safe RPN calculator
 11. [x] learn to compose monadic functions
-12. learn how to make monads
+12. [x] learn how to make monads (done in "./loadedCoin.hs")
 -}
 
 {-task 9: about foldM
