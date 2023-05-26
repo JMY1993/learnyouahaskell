@@ -15,5 +15,6 @@ we have a few tasks in this cource file:
 8. implement function filterM
 9. implement foldM
 10. make a safe RPN calculator
-11. learn how to make monads
+11. learn to compose monadic functions
+12. learn how to make monads
 -}
