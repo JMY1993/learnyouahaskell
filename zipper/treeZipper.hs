@@ -9,6 +9,10 @@ goLeft (Node item l r, cs) = (l, RightCrumb item r:cs)
 goRight :: TreeZipper a -> TreeZipper a
 goRight (Node item l r, cs) = (r, LeftCrumb item l:cs)
 
+goUp :: TreeZipper a -> TreeZipper a
+goUp (r, LeftCrumb item l:cs) = (Node item l r, cs)
+goUp (l, RightCrumb item r:cs) = (Node item l r, cs)
+
 freeTree :: Tree Char  
 freeTree =   
     Node 'P'  
