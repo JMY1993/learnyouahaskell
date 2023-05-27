@@ -54,10 +54,13 @@ the `f` of (>>=) has a type of `(>>=) :: m a -> (a -> m b) -> m b
 newtype State' s a = State' {runState' :: s -> (a, s)}
 
 instance Functor (State' s) where
+    fmap :: (a -> b) -> State' s a -> State' s b
     fmap f (State' h) = State' (\s -> let (a, s') = h s in (f a, s')) 
 
 instance Applicative (State' s) where
+    pure :: a -> State' s a
     pure x = State' (x, )
+    (<*>) :: State' s (a -> b) -> State' s a -> State' s b
     State' g <*> State' f = State' (\s -> 
         let (a, s') = f s
             (f', s'') = g s'
@@ -65,8 +68,10 @@ instance Applicative (State' s) where
 
 instance Monad (State' s) where
 
+  return :: a -> State' s a
   return = pure
 
+  (>>=) :: State' s a -> (a -> State' s b) -> State' s b
   State' h >>= f = State' (\s ->
     let (a, s') = h s
         State' g = f a
