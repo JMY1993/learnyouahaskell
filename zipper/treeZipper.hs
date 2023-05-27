@@ -1,4 +1,5 @@
 import MyModules.BinarySearchTree
+import Monad.StateMonad
 
 data TreeCrumb a = LeftCrumb a (Tree a) | RightCrumb a (Tree a) deriving (Show)
 type TreeZipper a = (Tree a, [TreeCrumb a])
@@ -36,3 +37,32 @@ freeTree =
                 (Node 'C' EmptyTree EmptyTree)  
             )  
         )
+
+{-now try to implement goLeft, goRight, goUp as Stateful monad-}
+
+goLeftM :: State' (TreeZipper a) (Tree a)
+goLeftM = State' (\tz -> let zipper@(item, _) = goLeft tz in (item, zipper))
+
+goRightM :: State' (TreeZipper a) (Tree a)
+goRightM = State' (\tz -> let zipper@(item, _) = goRight tz in (item, zipper))
+
+goUpM :: State' (TreeZipper a) (Tree a)
+goUpM = State' (\tz -> let zipper@(item, _) = goUp tz in (item, zipper))
+
+-- now all the movements could be glued together with do notation or (>>)
+
+lrl :: State' (TreeZipper a) (Tree a)
+lrl = do
+    goLeftM
+    goRightM
+    goLeftM
+
+{-
+ghci> fst $ runState' lrl (freeTree, [])
+Node 'S' EmptyTree EmptyTree
+
+OR
+
+ghci> fst $ runState' (goLeftM >> goRightM >> goLeftM) (freeTree , [])
+Node 'S' EmptyTree EmptyTree
+-}
