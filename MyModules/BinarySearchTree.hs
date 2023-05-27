@@ -9,6 +9,7 @@ where
 
 data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)
 
+-- TODO: instance Tree as Monad
 singleton :: a -> Tree a
 singleton x = Node x EmptyTree EmptyTree
 
@@ -22,7 +23,7 @@ treeInsert x (Node a left right)
 treeFromList :: (Ord a) => [a] -> Tree a
 
 {-
-question: why the flowing code is recognized as a foldr by the compiler, but it seems to be a foldl since
+question: why the following code is recognized as a foldr by the compiler, but it seems to be a foldl since
 it starts from the left-most value?
 
 The lsp suggests to reform the code:
