@@ -28,8 +28,19 @@
 = (\b.ba)(\b.ba)c
 = (\b.ba)c
 = ca
+------ correction:
+(\a.aa)(\b.ba)c
+= (\b.ba)(\b.ba)c
+= (\b.ba)(a)c
+= aac
+
 
 7. (\xyz.xz(yz))(\x.z)(\x.a)
 = (\z.(\x.z)z((\x.a)z))
 = (\z.z((\x.a)z))
 = (\z.zz)
+------ correction:
+(\xyz.xz(yz))(\x.z)(\x.a)
+= (\xyt.xt(yt))(\p.z)(\b.a)
+= (\t.(\p.z)t((\b.a)t))
+= (\t.za)
